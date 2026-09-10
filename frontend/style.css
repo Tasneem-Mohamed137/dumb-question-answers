@@ -1,0 +1,596 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-family: Arial, sans-serif;
+
+    background: #fffaf5;
+    color: #343434;
+
+    overflow-x: hidden;
+}
+
+.app {
+    width: min(850px, 92%);
+    min-height: 600px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    position: relative;
+}
+
+.screen {
+    width: 100%;
+    text-align: center;
+
+    animation: appear 0.4s ease;
+}
+
+.hidden {
+    display: none !important;
+}
+
+
+/* =========================
+   MAIN QUESTION SCREEN
+========================= */
+
+h1 {
+    font-size: 48px;
+    margin-bottom: 12px;
+    letter-spacing: -1px;
+}
+
+.subtitle {
+    font-size: 18px;
+    color: #777;
+    margin-bottom: 35px;
+}
+
+.input-area {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+input {
+    width: 500px;
+
+    padding: 17px 20px;
+
+    border: 2px solid #e7dcd3;
+    border-radius: 18px;
+
+    outline: none;
+
+    font-size: 17px;
+
+    background: white;
+
+    transition: 0.2s;
+}
+
+input:focus {
+    border-color: #cbb5a5;
+
+    box-shadow:
+        0 5px 20px rgba(0, 0, 0, 0.06);
+}
+
+button {
+    border: none;
+    border-radius: 18px;
+
+    padding: 0 25px;
+
+    font-size: 17px;
+
+    cursor: pointer;
+
+    background: #343434;
+    color: white;
+
+    transition: 0.2s;
+}
+
+button:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 7px 15px rgba(0, 0, 0, 0.12);
+}
+
+
+/* =========================
+   DECORATIONS
+========================= */
+
+.decor {
+    position: absolute;
+
+    font-size: 30px;
+
+    animation: float 3s ease-in-out infinite;
+}
+
+.sticker-one {
+    top: 30px;
+    left: 40px;
+}
+
+.sticker-two {
+    top: 90px;
+    right: 45px;
+}
+
+.sticker-three {
+    bottom: 90px;
+    left: 70px;
+}
+
+.sticker-four {
+    bottom: 50px;
+    right: 70px;
+}
+
+
+/* =========================
+   LOADING SCREEN
+========================= */
+
+.loading-emoji {
+    font-size: 55px;
+
+    animation:
+        bounce 0.8s infinite alternate;
+}
+
+#loadingText {
+    font-size: 27px;
+
+    margin-bottom: 15px;
+}
+
+.dots span {
+    display: inline-block;
+
+    width: 8px;
+    height: 8px;
+
+    background: #343434;
+
+    border-radius: 50%;
+
+    margin: 3px;
+
+    animation: dot 1s infinite;
+}
+
+.dots span:nth-child(2) {
+    animation-delay: 0.15s;
+}
+
+.dots span:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+
+/* =========================
+   GENERAL RESULTS
+========================= */
+
+.small-title {
+    font-size: 14px;
+
+    letter-spacing: 3px;
+
+    color: #999;
+}
+
+
+/* =========================
+   YES / NO
+========================= */
+
+.decision {
+    font-size: 80px;
+
+    font-weight: bold;
+
+    margin: 20px 0;
+
+    animation: pop 0.5s ease;
+}
+
+.reason-card,
+.answer-card {
+    max-width: 600px;
+
+    margin: auto;
+
+    padding: 20px 25px;
+
+    background: white;
+
+    border-radius: 20px;
+
+    box-shadow:
+        0 8px 30px rgba(0, 0, 0, 0.07);
+
+    font-size: 19px;
+
+    line-height: 1.5;
+}
+
+
+/* =========================
+   WHEEL
+========================= */
+
+#wheelArea {
+    position: relative;
+
+    width: 420px;
+
+    margin: 0 auto;
+}
+
+#wheel {
+    display: block;
+
+    border-radius: 50%;
+
+    box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.12);
+}
+
+.wheel-pointer {
+    position: absolute;
+
+    z-index: 5;
+
+    top: -12px;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    font-size: 35px;
+}
+
+
+/* =========================
+   WINNER AREA
+========================= */
+
+#winnerArea {
+    position: relative;
+
+    min-height: 420px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    align-items: center;
+}
+
+
+/* Celebration around winner */
+
+.confetti {
+    font-size: 42px;
+
+    margin-bottom: 10px;
+
+    animation:
+        celebrationPop 0.8s ease-out,
+        celebrationFloat 1.5s ease-in-out 0.8s infinite;
+}
+
+
+/* Big winner */
+
+.winner-option {
+    font-size: clamp(55px, 9vw, 100px);
+
+    font-weight: bold;
+
+    line-height: 1.1;
+
+    max-width: 90%;
+
+    overflow-wrap: break-word;
+
+    animation:
+        winnerReveal 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+
+/* Winner label */
+
+.winner-label {
+    font-size: 18px;
+
+    letter-spacing: 5px;
+
+    margin-top: 12px;
+
+    color: #888;
+
+    animation:
+        labelAppear 0.6s ease 0.5s both;
+}
+
+
+/* Small comment */
+
+.winner-comment {
+    margin: 18px auto 0;
+
+    max-width: 600px;
+
+    padding: 12px 20px;
+
+    background: white;
+
+    border-radius: 18px;
+
+    font-size: 17px;
+
+    line-height: 1.3;
+
+    box-shadow:
+        0 8px 25px rgba(0, 0, 0, 0.07);
+
+    animation:
+        commentAppear 0.6s ease 1s both;
+
+    /* Keep the options comment to one visual line */
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+}
+
+
+/* =========================
+   ASK AGAIN BUTTON
+========================= */
+
+.again-button {
+    margin-top: 30px;
+
+    padding: 13px 25px;
+
+    background: white;
+
+    color: #343434;
+
+    border: 2px solid #ddd;
+
+    border-radius: 15px;
+}
+
+
+/* =========================
+   BASIC ANIMATIONS
+========================= */
+
+@keyframes appear {
+
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-8px);
+    }
+}
+
+
+@keyframes bounce {
+
+    from {
+        transform: translateY(0);
+    }
+
+    to {
+        transform: translateY(-10px);
+    }
+}
+
+
+@keyframes dot {
+
+    0%,
+    100% {
+        opacity: 0.3;
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
+
+@keyframes pop {
+
+    from {
+        transform: scale(0.5);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+
+/* =========================
+   WINNER ANIMATIONS
+========================= */
+
+@keyframes winnerReveal {
+
+    0% {
+        transform: scale(0.2);
+
+        opacity: 0;
+    }
+
+    45% {
+        transform: scale(1.35);
+
+        opacity: 1;
+    }
+
+    70% {
+        transform: scale(0.92);
+    }
+
+    85% {
+        transform: scale(1.08);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+
+@keyframes celebrationPop {
+
+    0% {
+        transform: scale(0);
+
+        opacity: 0;
+    }
+
+    60% {
+        transform: scale(1.3);
+
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+
+@keyframes celebrationFloat {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-8px);
+    }
+}
+
+
+@keyframes labelAppear {
+
+    from {
+        opacity: 0;
+
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform: translateY(0);
+    }
+}
+
+
+@keyframes commentAppear {
+
+    from {
+        opacity: 0;
+
+        transform: translateY(15px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform: translateY(0);
+    }
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 650px) {
+
+    h1 {
+        font-size: 35px;
+    }
+
+    .input-area {
+        flex-direction: column;
+    }
+
+    input {
+        width: 100%;
+    }
+
+    button {
+        height: 52px;
+    }
+
+    #wheelArea,
+    #wheel {
+        width: 320px;
+        height: 320px;
+    }
+
+    .winner-option {
+        font-size: 45px;
+    }
+
+    .confetti {
+        font-size: 32px;
+    }
+
+    .winner-comment {
+        max-width: 90%;
+
+        font-size: 15px;
+    }
+}

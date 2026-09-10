@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Dumb Question Answers</title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+
+<body>
+
+    <main class="app">
+
+        <div class="decor sticker-one">✨</div>
+        <div class="decor sticker-two">🌷</div>
+        <div class="decor sticker-three">⭐</div>
+        <div class="decor sticker-four">🍀</div>
+
+
+        <section id="questionScreen" class="screen">
+
+            <h1>Dumb Question Answers</h1>
+
+            <p class="subtitle">
+                Ask a question. Get an answer. Don't overthink it.
+            </p>
+
+
+            <div class="input-area">
+
+                <input
+                    id="question"
+                    type="text"
+                    placeholder="Ask your dumb question..."
+                    autocomplete="off"
+                >
+
+                <button id="askButton">
+                    Ask ✨
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <section id="loadingScreen" class="screen hidden">
+
+            <div id="loadingEmoji" class="loading-emoji">
+                🤔
+            </div>
+
+            <h2 id="loadingText">
+                Thinking...
+            </h2>
+
+            <div class="dots">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+
+        </section>
+
+
+        <section id="resultScreen" class="screen hidden">
+
+            <div id="normalResult" class="hidden">
+
+                <p class="small-title">
+                    YOUR ANSWER
+                </p>
+
+                <div class="answer-card">
+
+                    <div id="normalAnswer"></div>
+
+                </div>
+
+            </div>
+
+
+            <div id="yesNoResult" class="hidden">
+
+                <p class="small-title">
+                    THE ANSWER IS
+                </p>
+
+                <div id="decision" class="decision">
+                    YES
+                </div>
+
+                <div class="reason-card">
+
+                    <p id="yesNoAnswer"></p>
+
+                </div>
+
+            </div>
+
+
+            <div id="optionsResult" class="hidden">
+
+                <div id="wheelArea">
+
+                    <div class="wheel-pointer">
+                        ▼
+                    </div>
+
+                    <canvas id="wheel" width="420" height="420"></canvas>
+
+                </div>
+
+
+                <div id="winnerArea" class="hidden">
+
+                    <div class="confetti">🎉 ✨ 🎊 ✨ 🎉</div>
+
+                    <div class="winner-option" id="winnerOption">
+                        Pizza
+                    </div>
+
+                    <div class="winner-label">
+                        WINNER!
+                    </div>
+
+                    <div class="winner-comment" id="winnerComment">
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <button id="againButton" class="again-button hidden">
+                Ask Again ↩
+            </button>
+
+        </section>
+
+    </main>
+
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
