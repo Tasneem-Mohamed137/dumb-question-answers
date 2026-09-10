@@ -87,7 +87,7 @@ async function askQuestion() {
     try {
 
         const response = await fetch(
-            "http://127.0.0.1:8000/ask",
+            "/ask",
             {
                 method: "POST",
 
@@ -103,6 +103,7 @@ async function askQuestion() {
 
 
         const result = await response.json();
+        
 
 
         loadingScreen.classList.add("hidden");
@@ -123,7 +124,9 @@ async function askQuestion() {
             .classList.remove("hidden");
 
         document.getElementById("normalAnswer").innerText =
-            "The Oracle is currently asleep. Check that FastAPI and Ollama are running 😭";
+           "ERROR: " + error.message;
+
+    console.error(error);
 
     }
 
@@ -172,11 +175,11 @@ function showYesNo(result) {
 
 
     document.getElementById("decision").innerText =
-        result.decision;
+        result.decision || "ERROR";
 
 
     document.getElementById("yesNoAnswer").innerText =
-        result.answer;
+        result.answer || result.error || "Something went wrong 😭";
 
 
     againButton.classList.remove("hidden");
@@ -191,7 +194,7 @@ function showNormal(result) {
 
 
     document.getElementById("normalAnswer").innerText =
-        result.answer;
+        result.answer || result.error || "Something went wrong 😭";
 
 
     againButton.classList.remove("hidden");

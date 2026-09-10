@@ -1,10 +1,18 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
+
 import random
 import requests
+import os
+
+from dotenv import load_dotenv
 
 import pro
+
+
+load_dotenv()
 
 
 app = FastAPI()
@@ -23,35 +31,87 @@ class Question(BaseModel):
     question: str
 
 
-@app.get("/")
-def home():
-    return {"message": "Dumb Question Answers is alive!"}
+GEMINI_URL = (
+    "https://generativelanguage.googleapis.com/"
+    "v1beta/models/gemini-3.5-flash:generateContent"
+)
+
+
+def ask_gemini(prompt):
+
+    GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+
+    if not GEMINI_API_KEY:
+        raise Exception("GEMINI_API_KEY is not set")
+
+    data = {
+        "contents": [
+            {
+                "parts": [
+                    {
+                        "text": prompt
+                    }
+                ]
+            }
+        ]
+    }
+
+    response = requests.post(
+        GEMINI_URL,
+        headers={
+            "x-goog-api-key": GEMINI_API_KEY,
+            "Content-Type": "application/json"
+        },
+        json=data
+    )
+
+    print("Gemini status:", response.status_code)
+    print("Gemini response:", response.text)
+
+    response.raise_for_status()
+
+    result = response.json()
+
+    return result["candidates"][0]["content"]["parts"][0]["text"]
 
 
 @app.post("/ask")
 def ask_question(data: Question):
 
-    question = data.question.strip()
+    try:
 
-    question_type = pro.classify_question(question)
+        print("ASK ENDPOINT REACHED")
+        print("Question:", data.question)
+
+        question = data.question.strip()
+
+        question_type = pro.classify_question(question)
+
+        print("Question type:", question_type)
 
 
-    # ---------------- YES / NO ----------------
+        # YES / NO
 
-    if question_type == "yes_no":
+        if question_type == "yes_no":
 
-        decision = random.choice(["YES", "NO"])
+            decision = random.choice([
+                "YES",
+                "NO"
+            ])
 
-        prompt = f"""
+            prompt = f"""
 The user asked:
 
 {question}
 
-The decision has already been made: {decision}
+The decision has already been made:
+
+{decision}
 
 Give a short funny, silly, natural reason for this decision.
 
-It should feel like a funny little sign that somehow makes sense.
+It should somehow make sense and feel like a funny little
+sign from the universe.
 
 Do NOT change the decision.
 Do NOT repeat the decision.
@@ -59,90 +119,62 @@ Do NOT repeat the decision.
 Maximum 2 short lines.
 """
 
+            answer = ask_gemini(prompt)
 
-        ollama_data = {
-            "model": "llama3.2:3b",
-            "prompt": prompt,
-            "stream": False
-        }
+            answer = " ".join(answer.strip().split())
 
-
-        response = requests.post(
-            "http://localhost:11434/api/generate",
-            json=ollama_data
-        )
+            return {
+                "type": "yes_no",
+                "decision": decision,
+                "answer": answer
+            }
 
 
-        result = response.json()
+        # OPTIONS
 
+        elif question_type == "options":
 
-        return {
-            "type": "yes_no",
-            "decision": decision,
-            "answer": result["response"].strip()
-        }
+            options = [
+                option.strip()
+                for option in question.split(",")
+                if option.strip()
+            ]
 
+            winner = random.choice(options)
 
-    # ---------------- OPTIONS ----------------
-
-    elif question_type == "options":
-
-        options = question.split(",")
-
-        options = [
-            option.strip()
-            for option in options
-            if option.strip()
-        ]
-
-
-        winner = random.choice(options)
-
-
-        prompt = f"""
+            prompt = f"""
 The chosen option is:
 
 {winner}
 
-Give ONE very short, silly, funny comment about why this option won.
+Give ONE very short, silly and funny comment
+about why this option won.
 
 It MUST be exactly one short line.
+
 Do not choose another option.
 Do not mention that the choice was random.
 """
 
+            answer = ask_gemini(prompt)
 
-        ollama_data = {
-            "model": "llama3.2:3b",
-            "prompt": prompt,
-            "stream": False
-        }
+            answer = " ".join(answer.strip().split())
 
-
-        response = requests.post(
-            "http://localhost:11434/api/generate",
-            json=ollama_data
-        )
+            return {
+                "type": "options",
+                "options": options,
+                "winner": winner,
+                "answer": answer
+            }
 
 
-        result = response.json()
-        comment = " ".join(result["response"].strip().split())
+        # NORMAL QUESTION
 
+        else:
 
-        return {
-            "type": "options",
-            "options": options,
-            "winner": winner,
-            "answer": comment
-        }
-
-
-    # ---------------- NORMAL ----------------
-
-    else:
-
-        prompt = f"""
-Answer this question in a funny, silly, but somehow reasonable way:
+            prompt = f"""
+Answer this question in a funny, silly,
+but somehow reasonable way:
 
 {question}
 
@@ -151,23 +183,30 @@ Make it feel like a funny little sign from the universe.
 Maximum 2 short lines.
 """
 
-        ollama_data = {
-            "model": "llama3.2:3b",
-            "prompt": prompt,
-            "stream": False
-        }
+            answer = ask_gemini(prompt)
+
+            answer = " ".join(answer.strip().split())
+
+            return {
+                "type": "normal",
+                "answer": answer
+            }
 
 
-        response = requests.post(
-            "http://localhost:11434/api/generate",
-            json=ollama_data
-        )
+    except Exception as error:
 
-
-        result = response.json()
-
+        print("REAL ERROR:", repr(error))
 
         return {
-            "type": "normal",
-            "answer": result["response"].strip()
+            "error": str(error)
         }
+
+
+# Serve the frontend
+
+app.mount(
+    "/",
+    StaticFiles(directory="frontend", html=True),
+    name="frontend"
+)
+
